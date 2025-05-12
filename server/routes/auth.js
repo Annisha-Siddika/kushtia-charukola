@@ -44,3 +44,101 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Authentication routes
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     SignupRequest:
+ *       type: object
+ *       required:
+ *         - name
+ *         - email
+ *         - password
+ *       properties:
+ *         name:
+ *           type: string
+ *           example: Raihanul Islam Sharif
+ *         email:
+ *           type: string
+ *           example: raihan@example.com
+ *         password:
+ *           type: string
+ *           example: mysecretpassword
+ *     LoginRequest:
+ *       type: object
+ *       required:
+ *         - email
+ *         - password
+ *       properties:
+ *         email:
+ *           type: string
+ *           example: raihan@example.com
+ *         password:
+ *           type: string
+ *           example: mysecretpassword
+ *     LoginResponse:
+ *       type: object
+ *       properties:
+ *         token:
+ *           type: string
+ *         user:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: string
+ *             email:
+ *               type: string
+ */
+
+/**
+ * @swagger
+ * /auth/signup:
+ *   post:
+ *     summary: Create a new user account
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/SignupRequest'
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: User already exists
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Login and get a JWT token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginRequest'
+ *     responses:
+ *       200:
+ *         description: Successful login
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/LoginResponse'
+ *       400:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Internal server error
+ */
