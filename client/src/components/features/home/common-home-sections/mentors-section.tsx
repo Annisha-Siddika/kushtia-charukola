@@ -28,6 +28,7 @@ const extractUniqueMentors = () => {
 };
 
 const MentorsSection = () => {
+  
   const allMentors = extractUniqueMentors();
 
   return (
