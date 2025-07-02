@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
 
 import { LoginRequest } from "@/types";
 import { useAuth } from '@/hooks/auth/use-auth';
@@ -140,7 +140,6 @@ export default function LoginForm() {
 
             <button
               onClick={handleGoogleLogin}
-              disabled={isLoading}
               className="flex items-center justify-center w-full border border-gray-300 py-2 px-4 rounded-lg text-gray-300 hover:bg-gray-700 transition mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <FcGoogle className="mr-2 text-xl" />
@@ -150,29 +149,31 @@ export default function LoginForm() {
         </div>
       </div>
 
-      {/* Image Side */}
-      <div className="relative w-full md:w-1/2 hidden md:flex items-center justify-center overflow-hidden">
-        <motion.div
-          initial={{ x: -100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 2, ease: "easeOut" }}
-        >
-          <Image
-            src="/images/login-image.jpg"
-            alt="Login image"
-            width={700}
-            height={700}
-            className="object-cover w-full h-full"
-          />
-        </motion.div>
+    {/* Image Side */}
+<div className="hidden md:flex w-full md:w-1/2 h-screen items-center justify-center relative overflow-hidden">
+  <motion.div
+    initial={{ x: -100, opacity: 0 }}
+    animate={{ x: 0, opacity: 1 }}
+    transition={{ duration: 2, ease: "easeOut" }}
+    className="relative w-[500px] 2xl:w-[700px] aspect-[4/3]"
+  >
+    <Image
+      src="/images/login-image.jpg"
+      alt="Signup image"
+      fill
+      className="object-cover rounded-3xl"
+    />
+  </motion.div>
+  <Toaster/>
 
-        <motion.div
-          initial={{ x: "100%" }}
-          animate={{ x: "-50%" }}
-          transition={{ duration: 2, ease: "linear" }}
-          className="absolute top-0 left-0 w-full h-full bg-gradient-to-l from-transparent via-yellow-200 to-transparent opacity-20"
-        />
-      </div>
+  <motion.div
+    initial={{ x: "100%" }}
+    animate={{ x: "-50%" }}
+    transition={{ duration: 2, ease: "linear" }}
+    className="absolute top-0 left-0 w-full h-full bg-gradient-to-l from-transparent via-yellow-200 to-transparent opacity-20"
+  />
+</div>
+
     </div>
   );
 }

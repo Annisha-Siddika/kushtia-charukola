@@ -5,7 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
 import { RegisterRequest } from "@/types";
 import { useAuth } from '@/hooks/auth/use-auth';
 
@@ -24,6 +24,7 @@ export default function SignupForm() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    // Handle nested profile fields
     if (name.startsWith("profile.")) {
       const field = name.split(".")[1];
       setFormData((prev) => ({
@@ -49,18 +50,14 @@ export default function SignupForm() {
       return;
     }
 
-    try {
-      await register(formData);
-    } catch {
-      toast.error("Registration failed");
-    }
+    await register(formData);
   };
 
   const handleGoogleSignup = () => {
     toast.error("Google sign up not implemented yet");
   };
 
-  return (
+ return (
     <div className="flex flex-col md:flex-row w-full h-screen overflow-hidden bg-kc-dark">
       {/* Form Side */}
       <div className="flex flex-col w-full md:w-1/2 p-4 md:p-8 overflow-y-auto scrollbar-hide">
@@ -222,39 +219,40 @@ export default function SignupForm() {
 
             <button
               onClick={handleGoogleSignup}
-              disabled={isLoading}
               className="flex items-center justify-center w-full border border-gray-300 py-2 px-4 rounded-lg text-gray-300 hover:bg-gray-700 transition mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <FcGoogle className="mr-2 text-xl " />
+              <FcGoogle className="mr-2 text-xl" />
               Sign up with Google
             </button>
           </motion.div>
         </div>
       </div>
 
-      {/* Image Side */}
-      <div className="hidden md:flex w-full md:w-1/2 h-screen items-center justify-center relative overflow-hidden">
-        <motion.div
-          initial={{ x: -100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 2, ease: "easeOut" }}
-        >
-          <Image
-            src="/images/login-image.jpg"
-            alt="Signup image"
-            width={700}
-            height={700}
-            className="object-cover w-full h-full"
-          />
-        </motion.div>
+     {/* Image Side */}
+<div className="hidden md:flex w-full md:w-1/2 h-screen items-center justify-center relative overflow-hidden">
+  <motion.div
+    initial={{ x: -100, opacity: 0 }}
+    animate={{ x: 0, opacity: 1 }}
+    transition={{ duration: 2, ease: "easeOut" }}
+    className="relative w-[500px] 2xl:w-[700px] aspect-[4/3]"
+  >
+    <Image
+      src="/images/login-image.jpg"
+      alt="Signup image"
+      fill
+      className="object-cover rounded-3xl"
+    />
+  </motion.div>
+  <Toaster/>
 
-        <motion.div
-          initial={{ x: "100%" }}
-          animate={{ x: "-50%" }}
-          transition={{ duration: 2, ease: "linear" }}
-          className="absolute top-0 left-0 w-full h-full bg-gradient-to-l from-transparent via-yellow-200 to-transparent opacity-20"
-        />
-      </div>
+  <motion.div
+    initial={{ x: "100%" }}
+    animate={{ x: "-50%" }}
+    transition={{ duration: 2, ease: "linear" }}
+    className="absolute top-0 left-0 w-full h-full bg-gradient-to-l from-transparent via-yellow-200 to-transparent opacity-20"
+  />
+</div>
+
     </div>
   );
 }
