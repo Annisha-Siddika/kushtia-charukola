@@ -6,6 +6,10 @@ export const API_PREFIX = `/api/${API_VERSION}`;
 export const swaggerConfig: SwaggerOptions = {
   swaggerOptions: {
     persistAuthorization: true,
+    displayRequestDuration: true,
+    docExpansion: 'list',
+    filter: true,
+    showCommonExtensions: true
   },
   customCss: ".swagger-ui .topbar { display: none }",
   customSiteTitle: "Kushtia Charukola API Documentation",
@@ -28,23 +32,91 @@ export const swaggerDefinition = {
   },
   servers: [
     {
-      url: `http://localhost:${process.env.PORT || 5000}${API_PREFIX}`,
-      description: "Development server",
+      url: process.env.NODE_ENV === 'production'
+        ? process.env.APP_URL || 'https://kfats-49p7.onrender.com'
+        : `http://localhost:${process.env.PORT || 5000}`,
+      description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Development server',
+    },
+  ],
+  security: [
+    {
+      BearerAuth: [],
     },
   ],
   components: {
+    schemas: {
+      User: {
+        type: "object",
+        properties: {
+          _id: {
+            type: "string",
+            format: "uuid",
+            description: "User ID"
+          },
+          email: {
+            type: "string",
+            format: "email",
+            description: "User's email address"
+          },
+          roles: {
+            type: "array",
+            items: {
+              type: "string",
+              enum: ["user", "admin", "mentor", "seller", "writer"]
+            },
+            description: "User roles"
+          },
+          status: {
+            type: "string",
+            enum: ["active", "inactive", "pending_verification", "suspended"],
+            description: "User account status"
+          },
+          profile: {
+            type: "object",
+            properties: {
+              firstName: { type: "string" },
+              lastName: { type: "string" },
+              phone: { type: "string" },
+              avatar: { type: "string" },
+              bio: { type: "string" }
+            }
+          },
+          emailVerified: { type: "boolean" },
+          createdAt: { type: "string", format: "date-time" },
+          updatedAt: { type: "string", format: "date-time" }
+        }
+      },
+      Error: {
+        type: "object",
+        properties: {
+          status: { type: "string", example: "error" },
+          message: { type: "string" },
+          errors: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                field: { type: "string" },
+                message: { type: "string" }
+              }
+            }
+          }
+        }
+      }
+    },
     securitySchemes: {
       BearerAuth: {
         type: "http",
         scheme: "bearer",
         bearerFormat: "JWT",
+        description: "Enter your JWT token in the format: Bearer <token>"
       },
       GoogleOAuth: {
         type: "oauth2",
         flows: {
           authorizationCode: {
-            authorizationUrl: "/api/v1/gAuth/google",
-            tokenUrl: "/api/v1/gAuth/tokens",
+            authorizationUrl: `${API_PREFIX}/gAuth/google`,
+            tokenUrl: `${API_PREFIX}/gAuth/tokens`,
             scopes: {
               "profile email": "Read user profile and email",
             },

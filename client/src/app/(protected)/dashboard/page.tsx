@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/auth-context/auth-context";
+import { useAuth } from '@/hooks/auth/use-auth';
 import { UserRole } from "@/config/rbac/types";
 
 // Dashboard-specific redirects
@@ -56,15 +56,15 @@ export default function DashboardPage() {
             const redirectPath = DASHBOARD_REDIRECTS[highestRole];
             console.log('Redirecting to:', redirectPath);
 
-            // Always redirect to a dashboard path
+            // Redirect to the appropriate dashboard
             if (redirectPath) {
                 router.replace(redirectPath);
             } else {
-                // Fallback to user dashboard if something goes wrong
+                // Fallback to user dashboard
                 router.replace('/dashboard/user');
             }
         }
     }, [user, isLoading, router]);
 
     return null;
-} 
+}
